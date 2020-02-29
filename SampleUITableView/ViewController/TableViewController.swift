@@ -17,6 +17,7 @@ import UIKit
  UITableViewDataSourceはデータの数やセルの更新など「表示」に関わる実装
  UITableViewDelegateはセルをタップしたなど「動き」に関わる実装
  */
+
 class TableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     private let cellClassName = "TableViewCell"
@@ -29,7 +30,7 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet weak var tableView: UITableView! {
         didSet {
             /* セルの登録
-             セルの種類分だけxibを用意してそれを登録するのが一般的
+             読み込ませたいセルの種類の数だけxibを用意してそれを登録するのが一般的
              xibを使わない場合などは登録方法が違う
              今時は便利なライブラリを使うがここではiOS標準機能だけで書いている
              */
@@ -37,7 +38,6 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
             let cellNib = UINib(nibName: cellClassName, bundle: nil)
             //このtableViewはこのセルを使いますよと登録する
             tableView.register(cellNib, forCellReuseIdentifier: reuseId)
-
 
             
             /*
@@ -50,7 +50,7 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
 
             /*
-             見積もりの高さ
+             推定の高さ
              固定の高さ
 
              tableViewはデフォルトでこのあたりを設定している
@@ -111,8 +111,8 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
      だけどどうしてもパフォーマンスチューニングをする必要がある時はここをうまくやる
      */
 //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        /*ガリガリ計算してセルの高さ*/
 //        return 1000
 //    }
-
 }
 
