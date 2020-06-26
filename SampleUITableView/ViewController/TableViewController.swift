@@ -38,7 +38,6 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
             let cellNib = UINib(nibName: cellClassName, bundle: nil)
             //このtableViewはこのセルを使いますよと登録する
             tableView.register(cellNib, forCellReuseIdentifier: reuseId)
-
             
             /*
              dataSourceとdelegateをどのViewControllerに任せるか
@@ -58,8 +57,8 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
              細かく指定した方が画面はスムーズに動く
              */
-//            tableView.estimatedRowHeight = UITableView.automaticDimension
-//            tableView.rowHeight = UITableView.automaticDimension
+//            tableView.estimatedRowHeight = 120
+//            tableView.rowHeight = 120
         }
     }
     
@@ -112,7 +111,9 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
      */
 //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 //        /*ガリガリ計算してセルの高さ*/
-//        return 1000
+//        let user = users[indexPath.row]
+//        let height = TableViewCell.cellHeight(user: user)
+//        return height
 //    }
 }
 

@@ -31,4 +31,8 @@ class TableViewCell: UITableViewCell {
         }
     }
 
+    static func cellHeight(user: UserModel) -> CGFloat {
+        /*読み込むデータに対して高さだけ決める*/
+        return 1000
+    }
 }
