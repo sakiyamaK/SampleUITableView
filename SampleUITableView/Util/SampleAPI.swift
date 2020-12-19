@@ -9,7 +9,7 @@
 import Foundation
 
 final class SampleAPI {
-    func getHome(completion:(([UserModel]?, Error?) -> Void)? = nil) {
+    func getHome(completion: (([UserModel]?, Error?) -> Void)? = nil) {
         //本来はapi通信をして取得する
         //ここでは仮で３秒後にapiからレスポンスをもらった動きとする
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {

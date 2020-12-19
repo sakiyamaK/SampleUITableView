@@ -30,6 +30,7 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
   @IBOutlet weak var indicator: UIActivityIndicatorView!
   @IBOutlet weak var tableView: UITableView! {
     didSet {
+
       /* セルの登録
        読み込ませたいセルの種類の数だけxibを用意してそれを登録するのが一般的
        xibを使わない場合などは登録方法が違う
@@ -109,13 +110,13 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
    他に楽なやり方もある
    だけどどうしてもパフォーマンスチューニングをする必要がある時はここをうまくやる
    */
-//  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//    /*ガリガリ計算してセルの高さ*/
-//    let user = users[indexPath.row]
-//    let height = TableViewCell.cellHeight(user: user)
-////    heightCache[indexPath.row] = height
-//
-//    return height
-//  }
+  //  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+  //    /*ガリガリ計算してセルの高さ*/
+  //    let user = users[indexPath.row]
+  //    let height = TableViewCell.cellHeight(user: user)
+  //    heightCache[indexPath.row] = height
+  //
+  //    return height
+  //  }
 }
 
