@@ -18,48 +18,40 @@ import UIKit
  UITableViewDelegateはセルをタップしたなど「動き」に関わる実装
  */
 
+class TestHeader: UITableViewHeaderFooterView {
+
+  func configure(color: UIColor = .red) {
+    self.contentView.backgroundColor = color
+  }
+
+  override func prepareForReuse() {
+    super.prepareForReuse()
+  }
+
+}
+
 class TableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
   private let cellClassName = "TableViewCell"
   private let reuseId = "TableViewCell"
 
   private let api = SampleAPI()
-  private var users:[UserModel] = []
+  private var userss:[[UserModel]] = [[], [], []]
   private var heightCache: [CGFloat] = []
+
+  private var visibleHeaders: [Int: TestHeader] = .init()
+  private var lastContentOffset: CGFloat = 0
+  private var isScrollDown: Bool = false
 
   @IBOutlet weak var indicator: UIActivityIndicatorView!
   @IBOutlet weak var tableView: UITableView! {
     didSet {
-
-      /* セルの登録
-       読み込ませたいセルの種類の数だけxibを用意してそれを登録するのが一般的
-       xibを使わない場合などは登録方法が違う
-       今時は便利なライブラリを使うがここではiOS標準機能だけで書いている
-       */
       //xibファイルを読み込む
       let cellNib = UINib(nibName: cellClassName, bundle: nil)
       //このtableViewはこのセルを使いますよと登録する
       tableView.register(cellNib, forCellReuseIdentifier: reuseId)
 
-      /*
-       dataSourceとdelegateをどのViewControllerに任せるか
-       普通はself
-       autolayoutからも設定ができる
-       */
-//      tableView.dataSource = self
-//      tableView.delegate = self
-
-      /*
-       推定の高さ
-       固定の高さ
-
-       tableViewはデフォルトでこのあたりを設定している
-       autolayoutからも設定ができる
-
-       細かく指定した方が画面はスムーズに動く
-       */
-//      tableView.estimatedRowHeight = 120
-//      tableView.rowHeight = 120
+      tableView.register(TestHeader.self, forHeaderFooterViewReuseIdentifier: "header")
     }
   }
 
@@ -79,44 +71,71 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         return
       }
       //成功してたら代入してリロード
-      self.users = _users
+      self.userss = [_users, _users, _users]
       self.tableView.isHidden = false
       self.indicator.isHidden = true
       self.tableView.reloadData()
     }
   }
 
-
-  /*
-   絶対に実装を追加しないといけないのはこのふたつ
-   残りのセクション数などはデフォルトになっている
-   */
+  func numberOfSections(in tableView: UITableView) -> Int {
+    self.userss.count
+  }
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return users.count
+    return userss[section].count
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseId, for: indexPath) as? TableViewCell else {
       return UITableViewCell()
     }
-    let user = users[indexPath.row]
+    let user = userss[indexPath.section][indexPath.row]
     cell.configure(user: user)
     return cell
   }
 
-  /*
-   セルごとに高さを変える場合はこのfunctionを実装して計算する
-   他に楽なやり方もある
-   だけどどうしてもパフォーマンスチューニングをする必要がある時はここをうまくやる
-   */
-  //  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-  //    /*ガリガリ計算してセルの高さ*/
-  //    let user = users[indexPath.row]
-  //    let height = TableViewCell.cellHeight(user: user)
-  //    heightCache[indexPath.row] = height
-  //
-  //    return height
-  //  }
+  func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    print("viewForHeaderInSection \(section)")
+    let view = TestHeader()
+    view.configure()
+    visibleHeaders[section] = view
+    return view
+  }
+
+
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+    if (self.lastContentOffset > scrollView.contentOffset.y) {
+      // move up
+      isScrollDown = false
+    }
+    else if (self.lastContentOffset < scrollView.contentOffset.y) {
+      // move down
+      isScrollDown = true
+    }
+
+    // update the new position acquired
+    self.lastContentOffset = scrollView.contentOffset.y
+  }
+
+
+  func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    print("willDisplayHeaderView \(section)  \(isScrollDown)")
+    if !isScrollDown, let header = visibleHeaders[section] {
+      header.configure(color: .blue)
+    }
+    if let header = visibleHeaders[section + 1] {
+      header.configure(color: .red)
+    }
+  }
+
+  func tableView(_ tableView: UITableView, didEndDisplayingHeaderView view: UIView, forSection section: Int) {
+//    removeVisibleHeaderIfPossible(for: view)
+    if let header = visibleHeaders[section + 1] {
+      header.configure(color: .blue)
+    }
+    print("didEndDisplayingHeaderView \(section)")
+  }
 }
 

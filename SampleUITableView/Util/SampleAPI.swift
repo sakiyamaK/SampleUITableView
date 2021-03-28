@@ -12,7 +12,7 @@ final class SampleAPI {
     func getHome(completion: (([UserModel]?, Error?) -> Void)? = nil) {
         //本来はapi通信をして取得する
         //ここでは仮で３秒後にapiからレスポンスをもらった動きとする
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             let jsonData = self.sampleData()
             guard let users = try? JSONDecoder().decode([UserModel].self, from: jsonData) else {
                 completion?(nil, NSError.init(domain: "json error", code: 99, userInfo: nil))
