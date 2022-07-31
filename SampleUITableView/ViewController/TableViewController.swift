@@ -19,26 +19,24 @@ import UIKit
  */
 
 class TableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
     private let cellClassName = "TableViewCell"
     private let reuseId = "TableViewCell"
 
     private let api = SampleAPI()
-    private var users:[UserModel] = []
-//    private var heightCache: [IndexPath: CGFloat] = [IndexPath: CGFloat]()
+    private var users: [UserModel] = []
+//    private var heightCache: [IndexPath: CGFloat] = .init()
 
-    @IBOutlet weak var indicator: UIActivityIndicatorView!
-    @IBOutlet weak var tableView: UITableView! {
+    @IBOutlet var indicator: UIActivityIndicatorView!
+    @IBOutlet var tableView: UITableView! {
         didSet {
-
             /* セルの登録
              読み込ませたいセルの種類の数だけxibを用意してそれを登録するのが一般的
              xibを使わない場合などは登録方法が違う
              今時は便利なライブラリを使うがここではiOS標準機能だけで書いている
              */
-            //xibファイルを読み込む
+            // xibファイルを読み込む
             let cellNib = UINib(nibName: cellClassName, bundle: nil)
-            //このtableViewはこのセルを使いますよと登録する
+            // このtableViewはこのセルを使いますよと登録する
             tableView.register(cellNib, forCellReuseIdentifier: reuseId)
 
             /*
@@ -58,27 +56,27 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
              細かく指定した方が画面はスムーズに動く
              */
-            tableView.estimatedRowHeight = UITableView.automaticDimension
-            tableView.rowHeight = UITableView.automaticDimension
+//            tableView.estimatedRowHeight = UITableView.automaticDimension
+//            tableView.rowHeight = UITableView.automaticDimension
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //api通信してテーブルをリロード
+        // api通信してテーブルをリロード
 
-        api.getHome { (users, error) in
+        api.getHome { users, error in
             if let _error = error {
-                //api通信エラーが起きた時の処理
+                // api通信エラーが起きた時の処理
                 debugPrint(_error)
                 return
             }
             guard let _users = users else {
-                //apiは成功してるのにレスポンスが空の時
+                // apiは成功してるのにレスポンスが空の時
                 return
             }
-            //成功してたら代入してリロード
+            // 成功してたら代入してリロード
             self.users = _users
             self.tableView.isHidden = false
             self.indicator.isHidden = true
@@ -86,13 +84,12 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
 
-
     /*
      絶対に実装を追加しないといけないのはこのふたつ
      残りのセクション数などはデフォルトになっている
      */
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         return users.count
     }
 
@@ -114,6 +111,7 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
 //        if let height = heightCache[indexPath] {
 //            return height
 //        }
+//
 //        /*ガリガリ計算してセルの高さ*/
 //        let user = users[indexPath.row]
 //        let height = TableViewCell.cellHeight(user: user)
@@ -122,4 +120,3 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
 //        return height
 //    }
 }
-
